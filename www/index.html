@@ -1,0 +1,466 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+
+<head>
+<style type="text/css">
+.inline {
+  background-color: #f7f7f7;
+  border:solid 1px #B0B0B0;
+}
+.error {
+	font-weight: bold;
+	color: #FF0000;
+}
+.warning {
+	font-weight: bold;
+}
+.message {
+	font-style: italic;
+}
+.source, .output, .warning, .error, .message {
+	padding: 0 1em;
+  border:solid 1px #F7F7F7;
+}
+.source {
+  background-color: #2f4f4f;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.center {
+  text-align: center;
+}
+.hl.num {
+  color: #ff6347;
+}
+.hl.str {
+  color: #7fffd4;
+}
+.hl.com {
+  color: #da70d6;
+}
+.hl.opt {
+  color: #f5deb3;
+}
+.hl.std {
+  color: #f5deb3;
+}
+.hl.kwa {
+  color: #4682b4;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #98fb98;
+  font-weight: bold;
+}
+.hl.kwc {
+  color: #b57847;
+}
+.hl.kwd {
+  color: #b3caf5;
+}
+</style>
+  <meta name="description" content="ssExtra: Extending sampSurf for Double Sampling" /> 
+
+  <link rel="stylesheet" href="./css/ssExtra.css" type="text/css">
+  <link rel="stylesheet" href="./css/navList.css" type="text/css">
+
+  <title>The ssExtra Package</title>
+</head>
+
+<body id='container'>
+
+<!-- R-Forge Logo -->
+<div id='RFlogo'>
+<a href="https://r-forge.r-project.org/projects/ssextra/">
+<img src="./images/logo.png" width="100%"/> </a>
+</div>
+
+
+
+<div id='content'>
+
+<!--
+<h1><a href="https://r-forge.r-project.org/projects/sswavelets/">
+ The ssExtra Package:  Extending sampSurf for Double Sampling  </a></h1> -->
+
+<h1>The ssExtra Package: Extending sampSurf for Double Sampling </h1>
+
+<!-- navigation menu -->
+<ul id="navlist">
+  <li><a href="#Overview">Overview</a></li>
+  <li><a href="#Installation">Installation</a></li>
+  <li><a href="#Examples">Examples</a></li>
+</ul><br><br>
+
+
+
+
+
+
+
+
+
+<!-- ============================================================================================== -->
+<h2><a name="Overview"></a>Overview of the ssExtra package</h2>
+
+  <p> The <Rpkg>ssExtra</Rpkg> package is meant to be used in conjunction with
+      the <a href="http://sampsurf.r-forge.r-project.org/"><Rpkg>sampSurf</Rpkg></a>
+      package. Its main purpose is to provide additional functionality for double sampling
+      and other designs not available in <Rpkg>sampSurf</Rpkg>. As originally
+      designed, <Rpkg>sampSurf</Rpkg> simulate individual sampling surfaces for a singe
+      sampling method such as fixed area plots. The &ldquo;sampling surface&rdquo;
+      generated is a surface for a single attribute relative to a given tract or plot size
+      and population of either standing trees or downed coarse woody debris. However,
+      double sampling is a more general method that often entails more than one attribute,
+      and thus requires more than one sampling surface. Due to this added complexity, a
+      new S4 class structure with constructor (or generator) functions has been developed
+      that can be applied to such designs. These more complex designs also require new
+      Monte Carlo subsampling classes and methods because of the extra information that
+      must be stored in some (but not all) cases. One such case, is so-called
+      &ldquo;Big <acronym>BAF</acronym>&rdquo; sampling, which is supported in this
+      package.
+  </p>
+
+  <p> As the new classes developed, so did the requirements for other <em>helper</em>
+      functions to facilitate statistical and graphical estimation. The number of new
+      functions grew, as did the size of the code base, such that it was deemed too much
+      to continue to add on to <Rpkg>sampSurf</Rpkg>, which was already a fairly mature
+      system. In addition, the double sampling applications may be of less interest to
+      users than the simpler designs. For these reasons, and for the sake of clarity both
+      to the author and user, it was decided to create a new package to hold these new
+      extensions.
+  </p>
+
+
+<p> Details of package use are found in the package vignette: <Rclass>A User&rsquo;s Guide
+	to the ssExtra Package</Rclass>, while the help system is detailed in the normal
+	package vignette (in addition to the usual on-line package help system). Both provide
+	much more information on the new class structures and methods available in the
+	package. Information on installation and a simple example are found in the following
+	sections. Please refer to the vignettes for more details.
+</p>	  
+
+
+
+
+
+
+<!-- ============================================================================================== -->
+<h2><a name="Installation"></a>ssExtra installation</h2>
+
+
+<p> Before installing <Rpkg>ssExtra</Rpkg> it is recommended that you first
+  install <Rpkg>sampSurf</Rpkg> and its dependancies. Please refer to
+  the <a href="http://sampsurf.r-forge.r-project.org/#Installation"><Rpkg>sampSurf Installation</Rpkg></a>
+  section of its webpage for installation instructions pertaining to that package.
+</p>
+
+<p> <Rpkg>ssExtra</Rpkg> is available only on R-Forge. On the project pages, you will
+    note that you can install the package directly from R-Forge using&hellip; <br><br>
+
+<Rcode>install.packages("ssExtra", repos="http://R-Forge.R-project.org")</Rcode><br><br>
+
+and can include the <Rcode>dep=TRUE</Rcode> argument if you want the packages
+that <Rpkg>ssExtra</Rpkg> is dependent upon to also be installed. However, this is not
+recommended, please see the reasons in the above link (sampSurf installation) for more
+details.
+</p>
+
+<p> In addition, the <Rpkg>ssExtra</Rpkg> package requires that the following package be
+    installed prior to use if bootstrap confidence intervals are desired in Monte Carlo
+    runs. It is best to install the most recent version from <acronym>CRAN</acronym>
+    as&hellip;<br><br>
+
+  <Rcode>install.packages("bcaboot")</Rcode><br><br>
+
+</p>
+
+
+
+<h3><Rpkg>ssExtra</Rpkg> package vignette</h3>
+
+<p>
+As noted above, there is one extra package vignette (aside from the default help vignette)
+distributed with the package itself. Both can also be downloaded here from the R-Forge
+versions if desired&hellip;
+</p>
+
+
+<ol>
+
+  <li><a href="https://r-forge.r-project.org/scm/viewvc.php/*checkout*/pkg/inst/doc/ssExtra.pdf?root=sswavelets">
+	  <em> The help file for the <Rclass>ssExtra</Rclass> Package </em></a><br><br>
+
+  <li><a href="https://r-forge.r-project.org/scm/viewvc.php/*checkout*/pkg/inst/doc/ssExtraUsersGuide.pdf?root=sswavelets">
+	  <em> A User's Guide to the <Rclass>ssExtra</Rclass> Package </em></a><br><br>
+
+</ol>
+
+The following two papers give details on a study of the variance for
+&ldquo;big <acronym>BAF</acronym>&rdquo; using sampling surfaces&hellip;
+
+<ul style="list-style-type:none">
+  
+  <li>Gove, J. H., T. G. Gregoire, M. J. Ducey and T. B. Lynch
+	2020. <a href="https://forestecosyst.springeropen.com/">A note on the estimation of
+	variance for big BAF sampling.</a> <i>Forest Ecosystems</i> <b>?</b>:1&ndash;24;
+	(plus supplementary material).
+  </li><br>
+  
+  <li>Lynch, T. B., J. H. Gove, T. G. Gregoire and M. J. Ducey
+	2020. <a href="https://forestecosyst.springeropen.com/">An approximate point-based
+	alternative for the estimation of variance under big BAF sampling.</a> <i>Forest
+	Ecosystems</i> <b>?</b>:1&ndash;24; (plus supplementary material).
+  </li>
+
+</ul> 
+
+
+
+
+
+
+
+
+
+
+<!-- ============================================================================================== -->
+
+<!-- 
+     The following sets global options for the document...
+
+     for themes see: knit_theme$get() for a list of themes, 
+     they are from: http://eclipsecolorthemes.org/ 
+
+     ***Note that the highlight package was discontinued/orphaned in CRAN, so
+     use.highlight=TRUE is no longer applicable in opts_knit$set below. 4-Mar-2013
+-->
+
+
+
+
+<!-- 
+    Set the chace directory; if using htmlKnitr(), the working directory is set to
+    ~/Rwork/knitr/webpage, so the cahce will be relative to this...
+-->
+		   
+
+
+
+
+<!--
+   15-April-2015
+ 
+   The following code will stop the automatic addition of a "-i" (where i is the number of
+   figures per code chunk) from being appended to figure file names. Since I only generate
+   one chunk per figure, and because I don't want to change everything to support the
+   "-i", I am using the code the was suggested by Yihui Xie at...
+
+   https://groups.google.com/forum/#!topic/knitr/0WFJmfIUZJA
+
+   It seems to work fine--simply comment it out if it is not desired anymore.
+-->
+
+
+
+
+
+
+
+
+<!-- ============================================================================================== -->
+<h2><a name="Examples"></a>ssExtra examples</h2>
+
+
+
+<p>
+Here we present one very simple example illustrating how to use a few of the main
+functions in the <Rpkg>ssExtra</Rpkg> package. The User's Guide vignette goes into
+extensive detail concerning the use of the methods shown below as well as many others. In
+addition, the online help system is quite thorough in documenting class structures,
+generic functions, and their methods. Therefore, what is provided is a very terse 
+example to show a little of the functionality of the package here. Please refer to the
+<a href="http://sampsurf.r-forge.r-project.org/#Examples"><Rpkg>sampSurf
+	Examples</Rpkg></a> and associated vignettes for more information on constructing
+	sampling surfaces.
+</p>
+
+
+
+
+
+<!-- --------------------------------------------- -->
+<h3> Big <acronym>BAF</acronym> sampling </h3>
+
+<p>
+  The following code will generate a <Rclass>ssBigBAF</Rclass> object for the northern
+  hardwoods similar to what was used in the above references, but smaller in size here for
+  illustration sake. A similar example, but with a different tree population and more
+  details is found in the User&rsquo;s Guide; please refer to it and the help files for
+  details on input arguments. The <Code>createBBNH</Code> function will create a standing
+  tree population for northern hardwoods using the same models as the studies cited
+  above. This uses a smaller population that is simpler for illustration here. Note that
+  both &ldquo;English&rdquo; and metric units are shown in the printed output of this
+  function below. The reason for this is explained in detail in the User&rsquo;s Guide
+  vignette.
+</p>
+
+
+
+<div class="chunk" id="createBBNH"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">R&gt; </span><span class="hl kwd">require</span><span class="hl std">(ssExtra)</span>
+<span class="hl std">R&gt; </span><span class="hl std">ssBB</span> <span class="hl kwb">=</span> <span class="hl kwd">createBBNH</span><span class="hl std">(</span><span class="hl kwd">c</span><span class="hl std">(</span><span class="hl kwc">x</span><span class="hl std">=</span><span class="hl num">100</span><span class="hl std">,</span> <span class="hl kwc">y</span><span class="hl std">=</span><span class="hl num">100</span><span class="hl std">),</span> <span class="hl kwc">bufferWidth</span> <span class="hl std">=</span> <span class="hl num">14</span><span class="hl std">,</span> <span class="hl kwc">baf.bb</span> <span class="hl std">=</span> <span class="hl num">20</span><span class="hl std">,</span> <span class="hl kwc">startSeed</span> <span class="hl std">=</span> <span class="hl num">3789</span><span class="hl std">)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">
+Creating tract...
+Creating tree population...
+Input specs...
+  Number of trees/acre = 107
+  Quadratic msd = 11.69267 in
+  Basal area/acre = 80
+  Weibull shape = 2
+  Weibull scale = 8 in
+  Weibull shift = 4 in
+Output specs...
+  units = metric
+  Number of trees/ha = 264
+  Quadratic msd = 29.699381 cm
+  Basal area/ha = 18.365473
+  Weibull scale = 20.32 cm
+  Weibull shift = 10.16 cm
+
+  Totals for the tract...
+  --Tract area (inside the buffer) = 0.5184
+  --Total N for above area = 136.8576
+  --Height perturbations with sd = 1.8288 meters added.
+  --Total Basal area sampled = 9.6005511
+
+Creating standingTrees object...
+Adding to data frame...
+
+Creating standingtreeIZs...
+Creating sampling surfaces...
+---Big BAF volume...
+Number of trees in collection = 136
+Heaping tree: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,
+
+---Big BAF basal area...
+Number of trees in collection = 136
+Heaping tree: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,
+
+---Count volume...
+Number of trees in collection = 136
+Heaping tree: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,
+
+---Count basal area...
+Number of trees in collection = 136
+Heaping tree: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,
+
+Creating ssBigBAF object...
+Creating the big BAF surface cell-stem IZ list...
+Creating the count surface cell-stem IZ list...
+
+***&gt;Be careful to heed any warning about partial inclusion zones lying outside the tract!
+    This warning means you need to increase the buffer size for this population!
+</pre></div>
+<div class="source"><pre class="knitr r"><span class="hl std">R&gt; </span><span class="hl std">ssBB</span>
+</pre></div>
+<div class="output"><pre class="knitr r">
+Object of class: ssBigBAF
+------------------------------------------------------------
+Big BAF sampling surface object
+------------------------------------------------------------
+
+Sampling surface slot contents/estimates...
+  ss.bb.vol: Big BAF volume surface, horizontalPointIZ, 20 BAF (metric)
+  ss.bb.ba: Big BAF basalArea surface, horizontalPointIZ, 20 BAF (metric)
+  ss.ct.ba: Count BAF basalArea surface, horizontalPointIZ, 4 BAF (metric)
+  ss.ct.vol: Count BAF volume surface, horizontalPointIZ, 4 BAF (metric)
+Number of stems = 136
+Mean BA surface-based sampling ratio count:bb = 5.0202886
+True baf-based sampling ratio count:bb = 5
+
+Please use &quot;summary&quot; on individual components (slots) for more details.
+</pre></div>
+</div></div>
+
+<p>
+An object of class <Rclass>ssBigBAF</Rclass> contains four sampling surfaces. For each of
+the two <acronym>BAF</acronym>s used both a volume and basal area surface are created. We
+can see how these were created in the output above from <Code>createBBNH</Code>. The
+following code shows the two surfaces for the larger <acronym>BAF</acronym>, with the
+figure titles being the names of the object slots for the two surfaces, which are also
+shown in the summary of the object from the last line of code above; thus, the left-hand
+figure is the basal area surface and the right-hand is the volume surface&hellip;
+</p>
+
+
+<div class="chunk" id="plot.ssBB.1"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">R&gt; </span><span class="hl kwd">plot</span><span class="hl std">(ssBB,</span> <span class="hl kwc">whichSS</span> <span class="hl std">=</span> <span class="hl kwd">c</span><span class="hl std">(</span><span class="hl str">'ss.bb.ba'</span><span class="hl std">,</span> <span class="hl str">'ss.bb.vol'</span><span class="hl std">),</span> <span class="hl kwc">useImage</span> <span class="hl std">=</span> <span class="hl num">FALSE</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figures/ssW-plot.ssBB.1.png" title="plot of chunk plot.ssBB.1" alt="plot of chunk plot.ssBB.1" class="plot" /></div></div>
+
+<p>
+  The two surfaces (basal area and volume) for the count <acronym>BAF</acronym> sample can
+  be displayed in the same manner as&hellip;
+</p>
+
+
+<div class="chunk" id="plot.ssBB.2"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">R&gt; </span><span class="hl kwd">plot</span><span class="hl std">(ssBB,</span> <span class="hl kwc">whichSS</span> <span class="hl std">=</span> <span class="hl kwd">c</span><span class="hl std">(</span><span class="hl str">'ss.ct.ba'</span><span class="hl std">,</span> <span class="hl str">'ss.ct.vol'</span><span class="hl std">),</span> <span class="hl kwc">useImage</span> <span class="hl std">=</span> <span class="hl num">FALSE</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figures/ssW-plot.ssBB.2.png" title="plot of chunk plot.ssBB.2" alt="plot of chunk plot.ssBB.2" class="plot" /></div></div>
+
+<p>
+Note the difference in scale for both basal area and volume between the two sets of
+sampling surfaces. The big <acronym>BAF</acronym> maximum is approximately twice the count
+ <acronym>BAF</acronym> maximum for both attributes. This should not be surprising, and
+will lead to a smaller variance in the count sample because of the larger inclusion zones
+(which spread the attribute density out over the tract leading to lower variation).
+</p>
+
+
+<!-- --------------------------------------------- -->
+<h3> Monte Carlo </h3>
+
+<p>
+The papers above deal with variance estimation under big <acronym>BAF</acronym>
+sampling. To adequately assess the different estimators available, one must look at
+repeated samples of various sizes drawn from the population sampling surfaces; this is
+where the Monte Carlo aspect comes into play. There is a new class structure for double
+sampling under Monte Carlo complete with a subclass for big <acronym>BAF</acronym>
+sampling and the associated class methods for the existing <Code>monte</Code> generic from
+<Rpkg>sampSurf</Rpkg>.
+</p>
+
+<p>
+The User&rsquo;s Guide presents a very detailed example along with an thorough explanation
+of the class slot structure and their use. The papers cited above give a larger set of
+examples on two populations that will provide a better idea of the relative merits of the
+different variance estimators using the Monte Carlo approach.
+</p>
+
+
+
+
+
+
+</div> <!-- #content -->
+
+<!-- ============================================================================================== -->
+
+
+   
+<div id="cleardiv"></div>
+
+<div id="footer">
+  <i>The examples in this page were generated using the very useful R
+  package <a href="http://yihui.name/knitr/"><Rpkg>knitr</Rpkg></a>.<br>  Last updated:
+  20-May-2020 (jhg)</i>
+</div>
+
+</body>
+</html>

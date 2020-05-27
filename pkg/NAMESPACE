@@ -1,0 +1,41 @@
+
+import(methods)
+importFrom(graphics, plot, hist, points, title, par)
+importFrom(utils, capture.output)
+importFrom(microbenchmark, microbenchmark)
+importFrom(boot, boot, boot.ci)
+import(stats)
+import(sp)
+import(spatial)
+#importFrom("sp", bbox, Spatial, SpatialGrid, SpatialGridDataFrame, plot)
+import(raster)
+
+import(bcaboot)
+
+import(sampSurf)
+
+
+#
+# eventually, this should perhaps list selective exports...
+#
+exportPattern("^[[:alpha:]]+")
+
+
+#--------------------------------------------------------------------------------------
+# methods export section...
+#
+
+#export required for all methods with external generics...
+exportMethods(monte, plot, summary, show, hist)
+
+
+
+#--------------------------------------------------------------------------------------
+# Classes export section...
+#
+
+#sampSurf Double Sampling & Big BAF classes...
+exportClasses(ssCellStemList, ssDoubleSampling, ssBigBAF)
+
+#monte Double Sampling & Big BAF classes...
+exportClasses(monteDoubleSampling, monteBigBAF)

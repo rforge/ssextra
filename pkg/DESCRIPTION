@@ -1,0 +1,29 @@
+Package: ssExtra
+Type: Package
+Title: Additional routines for sampSurf
+Version: 0.1-2
+Date: 2020-05-12
+Author: Jeffrey H. Gove
+Maintainer:  Jeffrey H. Gove <jgove@fs.fed.us>
+Depends: R (>= 2.13.1), methods(>= 2.13.1), sp(>= 0.9-84), raster(>= 1.9-5),
+         sampSurf (>= 0.7-4), bcaboot (>= 0.2-1)
+Suggests: parallel, xtable
+Imports: microbenchmark, spatial, boot, graphics, utils
+Description: This package provides some potentially useful helper functions for working
+             with objects created from the sampSurf package. It also provides some S4
+			 classes that extend the use of sampSurf to, e.g., double sampling.
+License: GPL (>= 3)
+LazyLoad: yes
+LazyData: yes
+Collate: ssCellStemListClass.R ssCellStemListConstructor.R listCellStem.R
+         ssDoubleSamplingClass.R ssBigBAFConstructors.R
+         ssBigBAFMisc.R ssBigBAFPlot.R
+		 getTreesBB.R
+         monteDoubleSamplingClass.R monteBBConstructor.R
+		 monteBBMisc.R monteBootBB.R monteBBHist.R monteStatsBB.R
+		 monteTreeStatsBB.R
+		 showCells.R
+		 initTract.R drawTreePop.R makePop.R
+		 testBoot.R compareBoot.R 
+		 createBBNH.R pctDiff.R ratioVariance.R
+		 montePBDM.R ciCaught.R grandMeans.R samplingVarMeans.R
