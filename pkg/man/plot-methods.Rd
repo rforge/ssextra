@@ -66,4 +66,4 @@ package in \code{\link[sampSurf:plot-methods]{plot}}.
 
 } %Methods
 \keyword{methods}
-\keyword{ ~~ other possible keyword(s) ~~ }
+%\keyword{ ~~ other possible keyword(s) ~~ }

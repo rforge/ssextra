@@ -48,4 +48,4 @@ There is currently one available method for the generic
 } %section
 
 \keyword{methods}
-\keyword{ ~~ other possible keyword(s) ~~ }
+%\keyword{ ~~ other possible keyword(s) ~~ }
