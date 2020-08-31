@@ -40,13 +40,13 @@
 #
 #   check for dim reduction if only one sample size & restore to matrix...
 #
-    if(class(res) == 'numeric') {
+    if(!is(res, 'matrix')) {        #if TRUE, it's a numeric vector
       res = as.matrix(res)
       rownames(res) = names(x)
       colnames(res) = n.names
     }
     else
-      res = t(res)                #to fix the way sapply returns the results
+      res = t(res)                  #to fix the way sapply returns the results
       
     return(res)
 }   #.grandMeans
