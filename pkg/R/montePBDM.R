@@ -12,6 +12,8 @@
 #   preparation. I have changed it a little to act like a constructor function
 #   in the "monte" family.
 #
+#**>The "simplified" PBDM was added today. 1-Sept-2020, JHG.
+#
 #Author...									Date: 30-April-2020
 #	Jeffrey H. Gove
 #	USDA Forest Service
@@ -116,7 +118,8 @@ function(object,
     
     #variances of the means...
     varMeans = list(pbDelta.ind = rvec,     #assuming independence (just to have this recorded)
-                    pbDelta = rvec     #full PBDM with covariances
+                    pbDelta = rvec,         #full PBDM with covariances
+                    pbdelta = rvec          #simplified PBDM
                    )
                    
     #standard error of the means...
@@ -142,7 +145,8 @@ function(object,
     lvec = rvec
     lvec[] = FALSE
     caught = list(pbDelta.ind = lvec,        #all as in varMeans, but with logical seed
-                  pbDelta = lvec
+                  pbDelta = lvec,
+                  pbdelta = lvec
                  ) 
 
                
@@ -200,6 +204,19 @@ function(object,
         covs$BcVv.cov[mc.lab, n.lab] = BcVv.cov
         covs$BcBv.cov[mc.lab, n.lab] = BcBv.cov
         covs$VvBv.cov[mc.lab, n.lab] = VvBv.cov
+        
+#
+#       the Expectation approximation in the paper based on P&H simplification...
+#
+        BcVv = Bc*Vv
+        BcBc = Bc*Bc
+        VvVv = Vv*Vv
+        pbdelta = VvVv*(Bc.varm/BcBc + Vv.varm/VvVv + Bv.varm/BcBc +
+                            2*( BcVv.cov/BcVv - BcBv.cov/BcBc -
+                                VvBv.cov/BcVv ) #cov terms
+                           )
+        varMeans$pbdelta[mc.lab, n.lab] = pbdelta
+        stErrs$pbdelta[mc.lab, n.lab] = sqrt(pbdelta)
 
 #
 #       correlations...
@@ -227,6 +244,12 @@ function(object,
         lowerCIs$pbDelta[i,j] = x$lci
         upperCIs$pbDelta[i,j] = x$uci
 
+        x = .ciCaught(ssBB.mc@means$vol.bb[i,j], stErrs$pbdelta[mc.lab, n.lab], 
+                     t.values[j], popVolume)
+        caught$pbdelta[i,j] = x$catch
+        lowerCIs$pbdelta[i,j] = x$lci
+        upperCIs$pbdelta[i,j] = x$uci
+
       } #mcSampleNos for loop
     } #sample size loop
 
@@ -234,17 +257,17 @@ function(object,
 #
 #   save the above results to the monteBigBAF object (not the *.ind results)...
 #
-    ssBB.mc@varMeans = c(ssBB.mc@varMeans, varMeans['pbDelta'])
-    ssBB.mc@stErrs = c(ssBB.mc@stErrs, stErrs['pbDelta'])
+    ssBB.mc@varMeans = c(ssBB.mc@varMeans, varMeans['pbDelta'], varMeans['pbdelta'])
+    ssBB.mc@stErrs = c(ssBB.mc@stErrs, stErrs['pbDelta'], stErrs['pbdelta'])
     ssBB.mc@corrs = c(ssBB.mc@corrs, cors['BcVv.cor'])
     ssBB.mc@corrs = c(ssBB.mc@corrs, cors['BcBv.cor'])
     ssBB.mc@corrs = c(ssBB.mc@corrs, cors['VvBv.cor'])
     ssBB.mc@covs = c(ssBB.mc@covs, covs['BcVv.cov'])
     ssBB.mc@covs = c(ssBB.mc@covs, covs['BcBv.cov'])
     ssBB.mc@covs = c(ssBB.mc@covs, covs['VvBv.cov'])
-    ssBB.mc@caught = c(ssBB.mc@caught, caught['pbDelta'])
-    ssBB.mc@lowerCIs = c(ssBB.mc@lowerCIs, lowerCIs['pbDelta'])
-    ssBB.mc@upperCIs = c(ssBB.mc@upperCIs, upperCIs['pbDelta'])
+    ssBB.mc@caught = c(ssBB.mc@caught, caught['pbDelta'], caught['pbdelta'])
+    ssBB.mc@lowerCIs = c(ssBB.mc@lowerCIs, lowerCIs['pbDelta'], lowerCIs['pbdelta'])
+    ssBB.mc@upperCIs = c(ssBB.mc@upperCIs, upperCIs['pbDelta'], upperCIs['pbdelta'])
 
 
 #
@@ -264,16 +287,26 @@ function(object,
 #   save to the monteBigBAF object...
 #
     ssBB.mc@gm.all$gm.varMeans = rbind(ssBB.mc@gm.all$gm.varMeans, 
-                                       gm.all$gm.varMeans['pbDelta', , drop=FALSE])
+                                       gm.all$gm.varMeans['pbDelta', , drop=FALSE],
+                                       gm.all$gm.varMeans['pbdelta', , drop=FALSE]
+                                     )
     ssBB.mc@gm.all$gm.stErrs = rbind(ssBB.mc@gm.all$gm.stErrs, 
-                                     gm.all$gm.stErrs['pbDelta', , drop=FALSE])
+                                     gm.all$gm.stErrs['pbDelta', , drop=FALSE],
+                                     gm.all$gm.stErrs['pbdelta', , drop=FALSE]
+                                    )
     ssBB.mc@gm.all$gm.corrs = rbind(ssBB.mc@gm.all$gm.corrs, gm.all$gm.cors)
     ssBB.mc@gm.all$gm.caught = rbind(ssBB.mc@gm.all$gm.caught, 
-                                     gm.all$gm.caught['pbDelta', , drop=FALSE])
+                                     gm.all$gm.caught['pbDelta', , drop=FALSE],
+                                     gm.all$gm.caught['pbdelta', , drop=FALSE]
+                                    )
     ssBB.mc@gm.all$gm.lowerCIs = rbind(ssBB.mc@gm.all$gm.lowerCIs, 
-                                       gm.all$gm.lowerCIs['pbDelta', , drop=FALSE])
+                                       gm.all$gm.lowerCIs['pbDelta', , drop=FALSE],
+                                       gm.all$gm.lowerCIs['pbdelta', , drop=FALSE]
+                                      )
     ssBB.mc@gm.all$gm.upperCIs = rbind(ssBB.mc@gm.all$gm.upperCIs, 
-                                       gm.all$gm.upperCIs['pbDelta', , drop=FALSE])
+                                       gm.all$gm.upperCIs['pbDelta', , drop=FALSE],
+                                       gm.all$gm.upperCIs['pbdelta', , drop=FALSE]
+                                      )
      
     
 #
